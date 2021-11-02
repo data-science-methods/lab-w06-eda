@@ -1,7 +1,7 @@
 #' ---
-#' title: "Data Science Methods, Lab for Week 99"
-#' author: "Your Name"
-#' email: Your Email
+#' title: "Data Science Methods, Lab for Week 6"
+#' author: "Ellis Cain"
+#' email: <ecain@ucmerced.edu>
 #' output:
 #'   html_document:
 #'     toc: true
@@ -19,10 +19,10 @@
 
 #' # Reflexivity #
 #' *Before starting the lab, spend 3 minutes writing a response to each reflexivity question.  Use a timer.  Answer these questions off the top of your head: don't worry about consulting or citing outside sources or about getting the answers "right" or "wrong."* 
-#' 1. *What do I already know about this subject?*
-#' 2. *Why am I studying this?*
-#' 3. *What do I expect or hope to find/learn, and why?*
-#' 4. *Who is affected by this topic, and how am I connected to them?* 
+#' 1. *What do I already know about this subject?* I don't know too much about assessing housing prices/costs, besides the 2008 market crash (I think). Since moving to Merced, I've become more aware of the different factors that could play a role in housing costs (vacancy rates, location, property management company, local policy, etc.). Still, I've never been to Ames, Iowa or even heard of the city before, so I'm not too familiar with the area.
+#' 2. *Why am I studying this?* This is an exercise to do exploratory data analysis, so it's helpful to look at a real-world problem that may not have clear trends or answers, and utilize what we've practiced to do some preliminary looks into the data and to see what's going on.
+#' 3. *What do I expect or hope to find/learn, and why?* I hope to be able to understand the factors that affect home value assessment in Ames, Iowa, and create a pipeline that this analysis can then be run on other areas. Hopefully, there will also be some trends that provide insight into the home value assessment.
+#' 4. *Who is affected by this topic, and how am I connected to them?* This affects people in Ames, Iowa. I am not from there, do not know anyone there, and will not move there, so I am not connected to or affected by this topic.
 #' 
 
 ## Setup
@@ -38,12 +38,12 @@ library(AmesHousing)
 #' *We'll start with Peng and Matsui's step 1, "Formulate your question."  The Ames dataset is often used to teach predictive modeling tasks, where the goal is to predict the final selling price.  So our question will be _which variables in the dataset are mostly highly correlated with sale price?_*
 #' 
 #' 1. *Look through the short descriptions in `?ames_raw` (or online, <https://cran.r-project.org/web/packages/AmesHousing/AmesHousing.pdf>).  Which variable reports the actual sale price?* 
-#' 
+#'  SalePrice
 #' 
 #' 
 
 #' 2. *As you were looking through the variable descriptions, you probably noticed a few variables that might be good predictors of sale price.  List two or three here.* 
-#' 
+#' Lot Area, Neighborhood, overall cond
 #' 
 #' 
 
@@ -53,10 +53,12 @@ library(AmesHousing)
 #' *`AmesHousing` includes a few different representations of the data.  We'll be working with `ames_raw`, which represents what you'd get from reading in the original CSV file.  However — like a lot of CSV files — the column names aren't R-friendly.*
 #' 1. *Try running the following line.  Can you explain why this causes an error?*
 # ames_raw$MS SubClass
-#' 
+#' There is a space in the variable title, to that's why it throws an "unexpected symbol" error when you try to call this line.
 
 #' 2. *We can use `set_names()` to modify a variable's names (here, the column names) in a pipe-friendly way.  In particular, `set_names()` supports passing a function to modify the names.  Write a pipe that starts with `ames_raw`, uses `make.names()` to deal with spaces and column names that start with numbers, and then uses `tolower()` to make all the names lowercase.  Assign the result to `dataf`, which will be our primary working dataframe.*
-# dataf = ???
+dataf = ames_raw |> 
+  set_names(make.names) |> 
+  set_names(tolower)
 
 
 #' # Problem 3 #
@@ -65,53 +67,57 @@ library(AmesHousing)
 #' 
 #' 1. *The paper abstract (see above) reports 2930 rows.  How many observations (rows) are in our version of the dataset?*  
 #' 
-problem3.1 = 1.7e15 # scientific notation: 1.7 x 10^15
+skimr::skim(dataf)
+#vis_miss(dataf)
+#Based on skimr::skim(), there are 2930 rows, which matches the amount from the report.
+problem3.1 = 2.93e3
 
 #' 2. *The abstract also reports 80 "explanatory variables (23 nominal, 23 ordinal, 14 discrete, and 20 continuous)."  How many factor, character, and numeric variables do we have in the dataframe?*
 #' 
-problem3.2.factors = 7
-problem3.2.characters = 18000
-problem3.2.numerics = 12
+problem3.2.factors = 0
+problem3.2.characters = 45
+problem3.2.numerics = 37
+
 
 #' 3. *Explain the relationship between the variables in the dataset and the variables in the dataframe as we've loaded it.* 
 #' 
-#' 
+#' First, there are 2 more varibles in the dataframe (82 variables) than originally reported in the dataset. There isn't a clear pattern between nominal/orginal/discrete/continuous and characters/numerics; nominal and ordinal variables could either be a number or character, while discrete and continuous are only numeric in our dataframe.
 #' 
 
 #' 4. *How many variables have missing values?  Hint: Check the class of the output of `skim()`.* 
 #' 
-problem3.4 = 937
+problem3.4 = length((skim(dataf)$n_missing > 0)[(skim(dataf)$n_missing > 0) == TRUE])
 
 
 #' # Problem 4 #
 # problem 4 ----
 #' *(This problem is a quick comprehension check for `dplyr` functions + pipes.)  `summarize()` is a tidyverse function that collapses multiple rows of data into a single row.  Like `mutate()` and `count()`, it respects groups constructed by `group_by()`.  Here's an example:* 
 
-# dataf %>% 
-#     group_by(ms.zoning) %>% 
-#     summarize(sale.price = mean(sale.price)) %>% 
-#     ungroup()
+dataf %>%
+  group_by(ms.zoning) %>%
+  summarize(saleprice = mean(saleprice)) %>% ###saleprice, not sale.price
+  ungroup()
 
 #' 1. *Examine the full codebook, at <http://jse.amstat.org/v19n3/decock/DataDocumentation.txt>.  What do the values of MS_Zoning represent?* 
 #' 
-#' 
+#' MS_zoning "identifies the general zoning classification of the sale", such as agriculture, commercial, industrial, or residential.
 #' 
 
 #' 2. *Run the following two expressions.  Why do they give different results?* 
 #' 
+#' The first filters saleprice above 100000, then summarizes the tibble with the average sale price of the different groups. The second overwrites the saleprice with the average saleprice, then filters to be above 100000, which causes some of the categories with lower means to be excluded.
 #' 
-#' 
-# dataf %>% 
-#     group_by(ms.zoning) %>% 
-#     filter(sale.price > 100000) %>% 
-#     summarize(sale.price = mean(sale.price)) %>% 
-#     ungroup()
+dataf %>%
+  group_by(ms.zoning) %>%
+  filter(saleprice > 100000) %>%
+  summarize(saleprice = mean(saleprice)) %>%
+  ungroup()
 
-# dataf %>% 
-#     group_by(ms.zoning) %>% 
-#     summarize(sale.price = mean(sale.price)) %>% 
-#     filter(sale.price > 100000) %>% 
-#     ungroup()
+dataf %>%
+  group_by(ms.zoning) %>%
+  summarize(saleprice = mean(saleprice)) %>%
+  filter(saleprice > 100000) %>%
+  ungroup()
 
 
 #' # Problem 5: Duplicate rows #
@@ -121,9 +127,14 @@ problem3.4 = 937
 #' 1. *Read the docs for `dplyr::distinct()`.  Then use this function to create a dataframe `dataf_nodup` with the duplicate rows removed.*  
 #' 
 
+dataf_nodup = dataf |> 
+  distinct()
+nrow(dataf)
+nrow(dataf_nodup)
+
 #' 2. *How many duplicate rows are in the dataset?*
 #' 
-# n_duplicate = ???
+n_duplicate = nrow(dataf) - nrow(dataf_nodup)
 
 
 #' # Problem 6: Coding ordinal variables #
@@ -134,30 +145,69 @@ problem3.4 = 937
 #' 
 #' 1. *Let's take a look at two condition variables, for the overall and exterior.  These are `overall.cond` and `exter.cond`, respectively. How are these two ordinal variables represented?*
 #' 
-#' 
+dataf_nodup$overall.cond #Represented as numberics
+dataf_nodup$exter.cond #Represented as characters
+
 #' 
 
 #' 2. *Since ultimately we're going to construct a Spearman rank correlation matrix (the quick-and-dirty approach to the problem), we need to get `exter.cond` into an integer representation. First, let's generate a table that shows the distribution across values of `exter.cond`, using `dplyr::count()`. Call this `ex_cond_count`. We'll use this to check the conversion process over the next few steps.*
-# ex_cond_count = ???
+ex_cond_count = dataf_nodup |> 
+  count(exter.cond)
 
 #' 3. *As a first attempt, write a function `char_to_int()` that takes a character vector as input, coerces to a factor using `as.factor()`, and then coerces it to `as.integer()`.  Using `mutate()` and `count()`, apply this function to `exter.cond` and check the distribution against your answer for #2.* 
 
+# char_to_int = function(character_vector) {
+#   char_factor = as.factor(character_vector)
+#   factor_int = as.integer(char_factor)
+# }
+# 
+# dataf_nodup |> 
+#   mutate(exter.cond = char_to_int(exter.cond)) |> 
+#   count(exter.cond)
+
 #' 4. *Can you explain what went wrong?  Hint:  Check the docs for the `levels` argument of `factor()`.*
 #' 
-#' 
+#' The numbers don't represent / reflect the quality (1 as excellent, 5 as average, 4 as poor, etc) since they were sorted alphabetically. (There isn't a mapping for the levels order)
 #' 
 
 #' 5. *We can fix this by passing in a character vector of the levels in the desired order, namely, from Po (Poor) to Ex (Excellent).  Modify `char_to_int()` to use such a vector in the `as.factor()` call.  Why doesn't this work?*
 #' 
+#' as.factor() only takes in a vector that needs to be factorized, so even if we try to add a levels vector, it won't use it (unused argument (levels=char_order)). We could just use factor() which would work.
 #' 
-#' 
+# char_to_int = function(character_vector, char_order) {
+#   char_factor = factor(character_vector, levels = char_order)
+#   factor_int = as.integer(char_factor)
+# }
+
+# char_to_int = function(character_vector, char_order) {
+#   char_factor = as.factor(character_vector, levels = char_order)
+#   factor_int = as.integer(char_factor)
+# }
+
+char_order <- c('Po','Fa','TA','Gd','Ex')
+
+# dataf_nodup |> 
+#   mutate(exter.cond = char_to_int(exter.cond, levels = char_order)) |> 
+#   count(exter.cond)
 
 #' 6. *The most efficient way to avoid this poor design is to use `forcats::fct_relevel()`.  This is loaded as part of the tidyverse, so you don't need to modify the packages loaded up above, or `DESCRIPTION`.  Rewrite `char_to_int()` again, using `fct_relevel()` in place of `as.factor()`, and check against your answer to #2 to ensure that this is all working as expected.*
 #' 
 
+char_to_int = function(character_vector, char_order = c('Po','Fa','TA','Gd','Ex')) {
+  char_factor = fct_relevel(character_vector,char_order)
+  factor_int = as.integer(char_factor)
+}
+
+dataf_nodup |> 
+  mutate(exter.cond = char_to_int(exter.cond, char_order)) |> 
+  count(exter.cond) 
+
+ex_cond_count
+
 #' 7. *Finally we want this factor to be in our analysis dataframe.  **Normally, to preserve immutability**, I would either do this in the pipe where we first loaded the CSV (as we did above, when we fixed the names), or start by creating something like `dataf_raw` and then write a pipe that did all the cleaning steps and assigning the result to `dataf`, including this.  For the purposes of this lab, we'll just do it here.  Using either `mutate_at()` or `mutate(across())`, apply `char_to_int()` to all of the condition variables represented using these same levels:  `exter.cond`, `bsmt.cond`, `heating.qc`, `garage.cond`.* 
 
-# dataf = ???
+dataf = dataf |> 
+  mutate_at(c('exter.cond','bsmt.cond', 'heating.qc', 'garage.cond'), char_to_int, char_order)
 
 
 
@@ -171,25 +221,28 @@ problem3.4 = 937
 #' 
 #' 1. *For the first problem (column types), we could use the tidyverse function `select()` to pull out a given set of columns from the dataframe.*
 
-# select(dataf, saleprice, overall.cond, gr.liv.area)
+select(dataf, saleprice, overall.cond, gr.liv.area)
 
 #' *But manually typing out all of the numerical covariates would be tedious and prone to error.  Fortunately `select()` is much more powerful than this.  You can read more in `?select` or here: <https://tidyselect.r-lib.org/reference/language.html>.  Then specifically read the docs for `where()`.*
 #' 
 #' *Write a pipe that `select()`s the numeric columns and passes the result to `cor()` for a Spearman regression and uses the `pairwise.complete.obs` method to handle missing values.  Assign the result to `cor_matrix`.*  
-# cor_matrix = ???
+
+cor_matrix = dataf |> 
+  select(where(is.integer)) |> 
+  cor(use="pairwise.complete.obs")
 
 
 #' 2. *Now we convert the correlation matrix into a dataframe. Uncomment the following line, and explain what it's doing.* 
-# cor_df = as_tibble(cor_matrix, rownames = 'covar')
-#' 
+cor_df = as_tibble(cor_matrix, rownames = 'covar')
+#' It is converting the symmetric cor_matrix to a tibble, and naming the rows "covar".
 #' 
 #' 
 
 
 #' 3. *What do the rows of `cor_df` represent?  The columns?  The values in each cell?* 
-#' - rows: 
-#' - columns: 
-#' - values: 
+#' - rows: one of the integer variables from the dataf
+#' - columns: one of the integer variables from the dataf
+#' - values: correlation value between the column and row variable
 
 #' 4. *We've calculated the correlations for each pair of variables.  Now we want to construct a table with the top 10 most highly-correlated variables.  Write a pipe that does the following, in order:*  
 #' - *Start with `cor_df`*
@@ -199,11 +252,16 @@ problem3.4 = 937
 #' - *Keep the top 10 rows.  Hint: `?top_n`*
 #' - *Assigns the result to the variable `top_10`*
 #' 
-
+top_10 <- cor_df |> 
+  select(covar,saleprice) |> 
+  mutate(absolute_correlation = abs(saleprice)) |> 
+  arrange(desc(absolute_correlation)) |> 
+  top_n(10)
+#x1st.flr.sf vs garage.yr.blt???  
 
 #' # Problem 8 #
 # problem 8 ----
 #' *In 1.2, you identified some variables that you thought might be good predictors of sale price.  How good were your expectations?* 
-#' 
-#' 
+#' My expectations were: Lot Area, Neighborhood, overall cond
+#' Out of my expectations, none of them matched the top 10 predictors of sale price. The closest would be my guess of "overall condition", since "overall quality" was the highest predictor, with a correlation of 0.799.
 #' 
