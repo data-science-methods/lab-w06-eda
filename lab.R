@@ -228,8 +228,8 @@ select(dataf, saleprice, overall.cond, gr.liv.area)
 #' *Write a pipe that `select()`s the numeric columns and passes the result to `cor()` for a Spearman regression and uses the `pairwise.complete.obs` method to handle missing values.  Assign the result to `cor_matrix`.*  
 
 cor_matrix = dataf |> 
-  select(where(is.integer)) |> 
-  cor(use="pairwise.complete.obs")
+  select(where(is.numeric)) |> 
+  cor(method = 'spearman', use="pairwise.complete.obs")
 
 
 #' 2. *Now we convert the correlation matrix into a dataframe. Uncomment the following line, and explain what it's doing.* 
@@ -257,7 +257,6 @@ top_10 <- cor_df |>
   mutate(absolute_correlation = abs(saleprice)) |> 
   arrange(desc(absolute_correlation)) |> 
   top_n(10)
-#x1st.flr.sf vs garage.yr.blt???  
 
 #' # Problem 8 #
 # problem 8 ----
