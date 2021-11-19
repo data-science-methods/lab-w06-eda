@@ -1,7 +1,7 @@
 #' ---
 #' title: "Data Science Methods, Lab for Week 99"
-#' author: "Your Name"
-#' email: Your Email
+#' author: "Richard Ellks"
+#' email: rellks@ucsd.edu
 #' output:
 #'   html_document:
 #'     toc: true
@@ -20,9 +20,14 @@
 #' # Reflexivity #
 #' *Before starting the lab, spend 3 minutes writing a response to each reflexivity question.  Use a timer.  Answer these questions off the top of your head: don't worry about consulting or citing outside sources or about getting the answers "right" or "wrong."* 
 #' 1. *What do I already know about this subject?*
+#' Other than that EDA stands for Exploratory Data Analysis, I don't know too much about this subject. Since I'm doing this lab a bit late and we dove into EDA in class already, I want to address what I knew about EDA before learning about it. EDA to me was simply a way to look at data, although I had never put a name to it other than simple analysis. It covers a broad range of analysis approaches.
+#' 
 #' 2. *Why am I studying this?*
+#' There are right ways to explore data and analyze it, and there are definitely wrong ways. I'm studying this to learn about approaches to analyze data that are not necessarily correct since I am of the firm belief that there is no right answer or one and only way, but approaches that interpret that data truthfully and transparently.
 #' 3. *What do I expect or hope to find/learn, and why?*
+#' I hope to learn more about EDA and the approaches that correctly interpret data. Since my knowledge of the topic is still somewhat limited, I hope to discover more about different approaches that I have never thought of and ones that possibly make data analysis easier in terms of clarity.
 #' 4. *Who is affected by this topic, and how am I connected to them?* 
+#' Anyone and everyone is affected by EDA in terms of who is doing the EDA and what audience they are appealing to, including myself. My target audience might be those interested in EEG or UX research but someone else who analyzes COVID data for example, might have an affect on the entire world.
 #' 
 
 ## Setup
