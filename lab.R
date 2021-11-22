@@ -172,16 +172,16 @@ ex_cond_count2 <- dataf %>%
 
 #' 5. *We can fix this by passing in a character vector of the levels in the desired order, namely, from Po (Poor) to Ex (Excellent).  Modify `char_to_int()` to use such a vector in the `as.factor()` call.  Why doesn't this work?*
 #' 
-#' Using the hardcoded vector does not correspond to the length of the input vector.
+#' This gives an error because using the hardcoded vector does not correspond to the length of the input vector.
 #' 
 char_to_int <- function(char_vec){
     return (as.factor(c("Po", "Fa", "TA", "Gd", "Ex")) %>% 
                 as.integer())
 }
 
-ex_cond_count3 <- dataf %>%
-    mutate(exter.cond = char_to_int(exter.cond)) %>% 
-    count(exter.cond)
+# ex_cond_count3 <- dataf %>%
+#     mutate(exter.cond = char_to_int(exter.cond)) %>% 
+#     count(exter.cond)
 
 #' 6. *The most efficient way to avoid this poor design is to use `forcats::fct_relevel()`.  This is loaded as part of the tidyverse, so you don't need to modify the packages loaded up above, or `DESCRIPTION`.  Rewrite `char_to_int()` again, using `fct_relevel()` in place of `as.factor()`, and check against your answer to #2 to ensure that this is all working as expected.*
 #' 
