@@ -1,7 +1,7 @@
 #' ---
-#' title: "Data Science Methods, Lab for Week 99"
-#' author: "Your Name"
-#' email: Your Email
+#' title: "Data Science Methods, Lab for Week 9"
+#' author: Dennis Perez
+#' email: dperez81@ucmerced.edu
 #' output:
 #'   html_document:
 #'     toc: true
