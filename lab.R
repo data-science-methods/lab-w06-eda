@@ -7,6 +7,25 @@
 #'     toc: true
 #' ---
 
+# How to ask a question in R: ??ames_raw
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #' Introduction
 #' *In this lab, we'll be looking at a set of housing sales data assembled by Dean De Cock of Truman State University in Missouri.  The dataset has been widely used for learning about predictive modeling or machine learning.  But we'll focus on using the techniques from today's notes to get a handle on a dataset with dozens of variables.*  
 #' 
@@ -16,13 +35,17 @@
 #' 
 #' *We'll be accessing the dataset using the `AmesHousing` package.  (Strictly speaking, we'll be using a CSV that I generated from one version in the `AmesHousing` package, because it gives us a chance to learn a few things about factors.)  It'll be useful to have the documentation for `AmesHousing::ames_raw` open, because it gives short descriptions of the many variables in the dataset:  <https://cran.r-project.org/web/packages/AmesHousing/AmesHousing.pdf>.  You can find a full codebook for the dataset at <http://jse.amstat.org/v19n3/decock/DataDocumentation.txt>.* 
 #' 
-
+AmesHousing::ames_raw
 #' # Reflexivity #
 #' *Before starting the lab, spend 3 minutes writing a response to each reflexivity question.  Use a timer.  Answer these questions off the top of your head: don't worry about consulting or citing outside sources or about getting the answers "right" or "wrong."* 
 #' 1. *What do I already know about this subject?*
-#' 2. *Why am I studying this?*
-#' 3. *What do I expect or hope to find/learn, and why?*
-#' 4. *Who is affected by this topic, and how am I connected to them?* 
+#' I do not know anything as of yet.
+#' 2. *Why am I studying this?* 
+#' I am assuming we are studying this to get a familiarity with factors- as stated in the introduction.
+#' 3. *What do I expect or hope to find/learn, and why?* 
+#' I believe this exercise will provide me familiarity with variable usage.
+#' 4. *Who is affected by this topic, and how am I connected to them?*  
+#' I am not entirely sure who is affected. Although, I would guess this topic affects home owners. I am connected to them because I would like to purchase a home myself someday.
 #' 
 
 ## Setup
@@ -33,19 +56,28 @@ library(visdat)
 
 library(AmesHousing)
 
+
+
+
+
 #' # Problem 1 #
 # problem 1 ----
 #' *We'll start with Peng and Matsui's step 1, "Formulate your question."  The Ames dataset is often used to teach predictive modeling tasks, where the goal is to predict the final selling price.  So our question will be _which variables in the dataset are mostly highly correlated with sale price?_*
 #' 
 #' 1. *Look through the short descriptions in `?ames_raw` (or online, <https://cran.r-project.org/web/packages/AmesHousing/AmesHousing.pdf>).  Which variable reports the actual sale price?* 
-#' 
+#' I looked through the short descriptions and I am not sure which variable reports the actual sales price. 
+#' The descriptions did not contain that information, but when I scrolled down, the pdf mentioned that spaces and special characters were changed to snake case. They mentioned Sale_Price here so I assume this is the actual sales price.
+#' However, I was unable to spot this variable when after running AmesHousing::ames_raw.
 #' 
 #' 
 
 #' 2. *As you were looking through the variable descriptions, you probably noticed a few variables that might be good predictors of sale price.  List two or three here.* 
-#' 
-#' 
-#' 
+#' Neighborhood
+#' House Style
+#' Overall Cond
+
+
+
 
 
 #' # Problem 2: Loading the data #
@@ -53,10 +85,17 @@ library(AmesHousing)
 #' *`AmesHousing` includes a few different representations of the data.  We'll be working with `ames_raw`, which represents what you'd get from reading in the original CSV file.  However — like a lot of CSV files — the column names aren't R-friendly.*
 #' 1. *Try running the following line.  Can you explain why this causes an error?*
 # ames_raw$MS SubClass
-#' 
+#' The system says that there is an unexpected token
 
-#' 2. *We can use `set_names()` to modify a variable's names (here, the column names) in a pipe-friendly way.  In particular, `set_names()` supports passing a function to modify the names.  Write a pipe that starts with `ames_raw`, uses `make.names()` to deal with spaces and column names that start with numbers, and then uses `tolower()` to make all the names lowercase.  Assign the result to `dataf`, which will be our primary working dataframe.*
-# dataf = ???
+#' 2. *We can use `set_names()` to modify a variable's names (here, the column names) in a pipe-friendly way.  In particular, `set_names()` supports passing a function to modify the names.  
+#' Write a pipe that starts with `ames_raw`, 
+#' uses `make.names()` to deal with spaces and column names that start with numbers, 
+#' and then uses `tolower()` to make all the names lowercase.  
+#' Assign the result to `dataf`, which will be our primary working dataframe.*
+#' 
+dataf = ames_raw %>% 
+    set_names(make.names) %>%
+    set_names(tolower) 
 
 
 #' # Problem 3 #
@@ -64,23 +103,47 @@ library(AmesHousing)
 #' *Next we have step 3, "Check the packaging," and 5, "Check your 'n's." Use `skimr::skim()` and `visdat` functions to answer the following questions.  To report the values that you find, replace the value assigned to the `problem` variable.*  
 #' 
 #' 1. *The paper abstract (see above) reports 2930 rows.  How many observations (rows) are in our version of the dataset?*  
-#' 
-problem3.1 = 1.7e15 # scientific notation: 1.7 x 10^15
+#' Upon running AmesHousing::ames_raw, I noticed the report said there were 2,930 observations
+#' Now I will use skimr and visdat as instructed to confirm whether this is true of the data set we made
+
+skimr::skim(dataf)
+vis_dat(dataf)
+vis_miss(dataf)
+# Skimr confirmed there are 2,930 observations
+
+#problem3.1 = 1.7e15 # scientific notation: 1.7 x 10^15
+problem3.1 = 2.93e3 # Scientific notation: 2.93 x 10^3
 
 #' 2. *The abstract also reports 80 "explanatory variables (23 nominal, 23 ordinal, 14 discrete, and 20 continuous)."  How many factor, character, and numeric variables do we have in the dataframe?*
 #' 
-problem3.2.factors = 7
-problem3.2.characters = 18000
-problem3.2.numerics = 12
+# problem3.2.factors = 7
+# problem3.2.characters = 18000
+# problem3.2.numerics = 12
 
+# After running skimr, I noticed the following
+problem3.2.factors = 0
+problem3.2.characters = 45
+problem3.2.numerics = 37
+# For a total of 82 variables in our newly created dataset
 #' 3. *Explain the relationship between the variables in the dataset and the variables in the dataframe as we've loaded it.* 
 #' 
 #' 
 #' 
 
 #' 4. *How many variables have missing values?  Hint: Check the class of the output of `skim()`.* 
-#' 
-problem3.4 = 937
+#' It looks like there are 27 variables/rows with missing values
+#' I counted the variables that had missing values in the output of skim
+#' I also ran rowSums(is.na(dataf)) to verify my count was correct.
+rowSums(is.na(dataf)) 
+ 
+#' Number of missing values total:
+sum(is.na(dataf))
+# There are 13,997 missing values
+#' Upon running sum(is.na(dataf)), I got the output: [1] 13997
+#' This was confirmed when I hand counted the numbers in the n_missing column of the skim output
+
+
+#problem3.4 = 937
 
 
 #' # Problem 4 #
