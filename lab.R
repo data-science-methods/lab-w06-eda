@@ -36,14 +36,18 @@ library(AmesHousing)
 #' # Problem 1 #
 # problem 1 ----
 #' *We'll start with Peng and Matsui's step 1, "Formulate your question."  The Ames dataset is often used to teach predictive modeling tasks, where the goal is to predict the final selling price.  So our question will be _which variables in the dataset are mostly highly correlated with sale price?_*
-#' 
+#' #goal: predict final selling price
+#' #question: which variables in the dataset are mostly highly correlated with sale price?
 #' 1. *Look through the short descriptions in `?ames_raw` (or online, <https://cran.r-project.org/web/packages/AmesHousing/AmesHousing.pdf>).  Which variable reports the actual sale price?* 
-#' 
+summary(ames_raw)
+ames_raw
+#
+#Sales Price is not in the raw file as far as I can see online and in the ames_raw when I look on here.
 #' 
 #' 
 
 #' 2. *As you were looking through the variable descriptions, you probably noticed a few variables that might be good predictors of sale price.  List two or three here.* 
-#' 
+# Overall condition, building type, year built
 #' 
 #' 
 
