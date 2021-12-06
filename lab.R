@@ -64,14 +64,12 @@ ames_raw$MS SubClass
 
 #' 2. *We can use `set_names()` to modify a variable's names (here, the column names) in a pipe-friendly way.  In particular, `set_names()` supports passing a function to modify the names. 
 # Write a pipe that starts with `ames_raw`, uses `make.names()` to deal with spaces and column names that start with numbers, and then uses `tolower()` to make all the names lowercase.  Assign the result to `dataf`, which will be our primary working dataframe.*
-dataf<- 
-  names(ames_raw), 
-   {ames_raw %>% 
-       names() %>% 
-       make.names() %>% 
-       tolower()}
-
+dataf<- ames_raw %>%
+  set_names(make.names)%>%
+  set_names(tolower)
   
+#tried a lot of different things, but ultimately realized I just was making it more complicated and trying to run make.names as its own function without set_names and wondering why it wouldn't turn dataf into a dataframe.
+#this takes the datafram ames_raw, and sets all of the column names to have no spacing and instead words are separated by a '.', and then they are all now lower case since r is case sensitive.  
 
 #' # Problem 3 #
 # problem 3 ----
