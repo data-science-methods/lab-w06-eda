@@ -184,22 +184,41 @@ dataf_nodup %>%
 
 #' 5. *We can fix this by passing in a character vector of the levels in the desired order, namely, from Po (Poor) to Ex (Excellent).  Modify `char_to_int()` to use such a vector in the `as.factor()` call.  Why doesn't this work?*
 #' 
+character_order<- c('Po', 'Fa', 'Ta', 'Gd', 'Ex') # establish the order
 char_to_int= function(character_vector) { #name and return type 
-charactor_factor = as.factor(character_vector, character_order) #taking vector and turning into a factor
+charactor_factor = as.factor(character_vector, levels=character_order) #taking vector and turning into a factor, and trying to add a section for adding levels to this
 factor_integer= as.integer(charactor_factor) #taking factor and turning it into integer
 }
-#trying to apply it to external condition, using mutate and count
 dataf_nodup %>%
-  mutate(exter.cond= char_to_int(exter.cond)) %>%
+  mutate(exter.cond= char_to_int(exter.cond, levels= character_order)) %>%
   count(exter.cond)
-#' 
+#this does not work, I don't know if its with my coding or if its supposed to not work
 
 #' 6. *The most efficient way to avoid this poor design is to use `forcats::fct_relevel()`.  This is loaded as part of the tidyverse, so you don't need to modify the packages loaded up above, or `DESCRIPTION`.  Rewrite `char_to_int()` again, using `fct_relevel()` in place of `as.factor()`, and check against your answer to #2 to ensure that this is all working as expected.*
 #' 
 
-#' 7. *Finally we want this factor to be in our analysis dataframe.  **Normally, to preserve immutability**, I would either do this in the pipe where we first loaded the CSV (as we did above, when we fixed the names), or start by creating something like `dataf_raw` and then write a pipe that did all the cleaning steps and assigning the result to `dataf`, including this.  For the purposes of this lab, we'll just do it here.  Using either `mutate_at()` or `mutate(across())`, apply `char_to_int()` to all of the condition variables represented using these same levels:  `exter.cond`, `bsmt.cond`, `heating.qc`, `garage.cond`.* 
+char_to_int= function(character_vector, character_order= c('Po', 'Fa', 'Ta', 'Gd', 'Ex')) { #name and return type/ needed to put the order inside the function piping? Asked someone in my department for help here since I was stuck
+  charactor_factor = forcats::fct_relevel(character_vector, levels=character_order) #taking vector and turning into a factor, and trying to add a section for adding levels to this
+  factor_integer= as.integer(charactor_factor) #taking factor and turning it into integer
+}
+dataf_nodup %>%
+  mutate(exter.cond= char_to_int(exter.cond, character_order)) %>%
+  count(exter.cond)
 
-# dataf = ???
+
+# A general quetion (and not a judgement so hopefully it doesn't read that way!)I have a question on this, and maybe this is just something I missed or kind of just teaching us how to actually program these things. Doesn't R already have ways or functions to do a lot of those things we just did without having to do all of those "by hand"? Just wondering because the way they begin teaching us R in PoliSci is very different than some of the stuff we have done in this class so I was curious if what I've previously learned is different, or if this is just the innerworkings of how it does it?
+
+#' 7. *Finally we want this factor to be in our analysis dataframe.  **Normally, to preserve immutability**, I would either do this in the pipe where we first loaded the CSV (as we did above, when we fixed the names), or start by creating something like `dataf_raw` and then write a pipe that did all the cleaning steps and assigning the result to `dataf`, including this.  For the purposes of this lab, we'll just do it here.  Using either `mutate_at()` or `mutate(across())`, apply `char_to_int()` to all of the condition variables represented using these same levels:  `exter.cond`, `bsmt.cond`, `heating.qc`, `garage.cond`.* 
+#`exter.cond`, `bsmt.cond`, `heating.qc`, `garage.cond`
+# 
+dataf = dataf%>%
+  char_to_int= function(character_vector, character_order= c('Po', 'Fa', 'Ta', 'Gd', 'Ex')) { #name and return type/ needed to put the order inside the function piping? Asked someone in my department for help here since I was stuck
+    charactor_factor = forcats::fct_relevel(character_vector, levels=character_order) #taking vector and turning into a factor, and trying to add a section for adding levels to this
+    factor_integer= as.integer(charactor_factor) #taking factor and turning it into integer
+  }
+dataf %>%
+  mutate(across(exter.cond, bsmt.cond, heating.qc, garage.cond) = char_to_int(exter.cond, character_order)) 
+  #note, first try above did not work but taking a break for right now.
 
 
 
