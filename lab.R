@@ -36,6 +36,7 @@ library(visdat)
 
 library(AmesHousing)
 
+
 #' # Problem 1 #
 # problem 1 ----
 #' *We'll start with Peng and Matsui's step 1, "Formulate your question."  The Ames dataset is often used to teach predictive modeling tasks, where the goal is to predict the final selling price.  So our question will be _which variables in the dataset are mostly highly correlated with sale price?_*
@@ -43,9 +44,9 @@ library(AmesHousing)
 #' #question: which variables in the dataset are mostly highly correlated with sale price?
 #' 1. *Look through the short descriptions in `?ames_raw` (or online, <https://cran.r-project.org/web/packages/AmesHousing/AmesHousing.pdf>).  Which variable reports the actual sale price?* 
 summary(ames_raw)
-ames_raw
+ames_raw$SalePrice
 #
-#Sales Price is not in the raw file as far as I can see online and in the ames_raw when I look on here.
+#SalePrice is the name of the variable representing sales price in the raw file
 #' 
 #' 
 
@@ -148,23 +149,49 @@ dataf %>%
 #' *(It's actually a little more complicated for strings.  The base R function `read.csv()` involves a call to `as.data.frame()`, which has an argument `stringsAsFactors` that, if true, coerces all strings/characters into factors.  Prior to R version 4, the default value for this was `TRUE`, because back in the 1990s it was relatively rare to have actual text variables in the data.  So, up until last year, `read.csv()` by default would parse string columns into factors.  Both `readr::read_csv()` (a tidyverse package) and the current version of `read.csv()` by default parse string columns into characters.)*
 #' 
 #' 1. *Let's take a look at two condition variables, for the overall and exterior.  These are `overall.cond` and `exter.cond`, respectively. How are these two ordinal variables represented?*
-#' 
+# They are respresented by a sinlge number that appears to be like a scale from 1-10.  
 #' 
 #' 
 
 #' 2. *Since ultimately we're going to construct a Spearman rank correlation matrix (the quick-and-dirty approach to the problem), we need to get `exter.cond` into an integer representation. First, let's generate a table that shows the distribution across values of `exter.cond`, using `dplyr::count()`. Call this `ex_cond_count`. We'll use this to check the conversion process over the next few steps.*
-# ex_cond_count = ???
+ex_cond_count = dataf_nodup%>%
+   dplyr::count(exter.cond)
 
 #' 3. *As a first attempt, write a function `char_to_int()` that takes a character vector as input, coerces to a factor using `as.factor()`, and then coerces it to `as.integer()`.  Using `mutate()` and `count()`, apply this function to `exter.cond` and check the distribution against your answer for #2.* 
+#char_to_int() into character vector, then to a factor with as.factor, then eventually into an integer with as.integer
+#how to write a function from happycoding:
+ #1 Write the return type of the function.
+ #2 Write the name of the function.
+ #3 Inside parenthesis (), list any parameters the function takes.
+ #4 Inside curly brackets {}, write the code that will run whenever the function is called. This is called the body of the function.
+ char_to_int= function(character_vector) { #name and return type 
+   charactor_factor = as.factor(character_vector) #taking vector and turning into a factor
+   factor_integer= as.integer(charactor_factor) #taking factor and turning it into integer
+ }
+ #trying to apply it to external condition, using mutate and count
+dataf_nodup %>%
+  mutate(exter.cond= char_to_int(exter.cond)) %>%
+  count(exter.cond)
+   
+
+
 
 #' 4. *Can you explain what went wrong?  Hint:  Check the docs for the `levels` argument of `factor()`.*
+#' So it "works" in terms of it does write a function (which I was pleasantly surprised I figured out how to do after many attempts!) but it doesn't put the data in the right format, or in the format that actually ranks them by quality. I think it is just showing them in 1-5 order based on their alphabetical standing.
 #' 
 #' 
 #' 
 
 #' 5. *We can fix this by passing in a character vector of the levels in the desired order, namely, from Po (Poor) to Ex (Excellent).  Modify `char_to_int()` to use such a vector in the `as.factor()` call.  Why doesn't this work?*
 #' 
-#' 
+char_to_int= function(character_vector) { #name and return type 
+charactor_factor = as.factor(character_vector, character_order) #taking vector and turning into a factor
+factor_integer= as.integer(charactor_factor) #taking factor and turning it into integer
+}
+#trying to apply it to external condition, using mutate and count
+dataf_nodup %>%
+  mutate(exter.cond= char_to_int(exter.cond)) %>%
+  count(exter.cond)
 #' 
 
 #' 6. *The most efficient way to avoid this poor design is to use `forcats::fct_relevel()`.  This is loaded as part of the tidyverse, so you don't need to modify the packages loaded up above, or `DESCRIPTION`.  Rewrite `char_to_int()` again, using `fct_relevel()` in place of `as.factor()`, and check against your answer to #2 to ensure that this is all working as expected.*
