@@ -101,13 +101,13 @@ skimr::skim(ames_raw)
 # problem 4 ----
 #' *(This problem is a quick comprehension check for `dplyr` functions + pipes.)  `summarize()` is a tidyverse function that collapses multiple rows of data into a single row.  Like `mutate()` and `count()`, it respects groups constructed by `group_by()`.  Here's an example:* 
 
-# dataf %>% 
-#     group_by(ms.zoning) %>% 
-#     summarize(sale.price = mean(sale.price)) %>% 
-#     ungroup()
+dataf %>% 
+ group_by(ms.zoning) %>% 
+summarize(saleprice = mean(saleprice)) %>% ##had to delete . from sales.price to get it to run
+ungroup()
 
 #' 1. *Examine the full codebook, at <http://jse.amstat.org/v19n3/decock/DataDocumentation.txt>.  What do the values of MS_Zoning represent?* 
-#' 
+#It is a description of all of the types of zoning classifications of the sale
 #' 
 #' 
 
@@ -115,18 +115,18 @@ skimr::skim(ames_raw)
 #' 
 #' 
 #' 
-# dataf %>% 
-#     group_by(ms.zoning) %>% 
-#     filter(sale.price > 100000) %>% 
-#     summarize(sale.price = mean(sale.price)) %>% 
-#     ungroup()
+dataf %>% 
+     group_by(ms.zoning) %>% 
+     filter(saleprice > 100000) %>% 
+     summarize(saleprice = mean(saleprice)) %>% 
+     ungroup()
 
-# dataf %>% 
-#     group_by(ms.zoning) %>% 
-#     summarize(sale.price = mean(sale.price)) %>% 
-#     filter(sale.price > 100000) %>% 
-#     ungroup()
-
+ dataf %>% 
+     group_by(ms.zoning) %>% 
+     summarize(saleprice = mean(saleprice)) %>% 
+     filter(saleprice > 100000) %>% 
+     ungroup()
+#simply they give different results because you're filtering and summarizing in different orders. In the first, since filtering happens first, you're limiting the sales data to less than 100k first, then summarizing it and providing the mean. In the second since you summarize and find the mean first, this will result in different groups of data since the sales in the mean can be below 100k, changing the mean, and then filtering of above 100k occurs to the means of the sales prices.
 
 #' # Problem 5: Duplicate rows #
 # problem 5 ----
