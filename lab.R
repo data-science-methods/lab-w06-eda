@@ -76,24 +76,26 @@ dataf<- ames_raw %>%
 #' *Next we have step 3, "Check the packaging," and 5, "Check your 'n's." Use `skimr::skim()` and `visdat` functions to answer the following questions.  To report the values that you find, replace the value assigned to the `problem` variable.*  
 #' 
 #' 1. *The paper abstract (see above) reports 2930 rows.  How many observations (rows) are in our version of the dataset?*  
-#' 
-problem3.1 = 1.7e15 # scientific notation: 1.7 x 10^15
+skimr::skim(dataf)
+problem3.1 = 2.93e3 # scientific notation: 1.7 x 10^15
 
 #' 2. *The abstract also reports 80 "explanatory variables (23 nominal, 23 ordinal, 14 discrete, and 20 continuous)."  How many factor, character, and numeric variables do we have in the dataframe?*
 #' 
-problem3.2.factors = 7
-problem3.2.characters = 18000
-problem3.2.numerics = 12
+problem3.2.factors = 0 # I don't see factor listed on the side for this in my console
+problem3.2.characters = 45 # data summary lists 45 charachters
+problem3.2.numerics = 37 #data summary lists 37 numeric
 
 #' 3. *Explain the relationship between the variables in the dataset and the variables in the dataframe as we've loaded it.* 
-#' 
-#' 
+skimr::skim(ames_raw)
+# It appears to me when I run the skim code on both, that they are the same, in terms of they are both 82 variables, and have the same number of entries, but just looking can see the difference in formatting in terms of how the variables are all named.
 #' 
 
 #' 4. *How many variables have missing values?  Hint: Check the class of the output of `skim()`.* 
 #' 
-problem3.4 = 937
-
+#problem3.4 = ifelse(skim(dataf)$n_missing>0,1,0)
+#summary(problem3.4)
+#skim(dataf) %>% 
+  #select(skim_variable, skim_type, n_missing, complete_rate)
 
 #' # Problem 4 #
 # problem 4 ----
