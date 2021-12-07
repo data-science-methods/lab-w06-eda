@@ -134,10 +134,11 @@ dataf %>%
 #' 
 #' 1. *Read the docs for `dplyr::distinct()`.  Then use this function to create a dataframe `dataf_nodup` with the duplicate rows removed.*  
 #' 
-
+ dataf_nodup<- dataf%>%
+   dplyr::distinct()
 #' 2. *How many duplicate rows are in the dataset?*
 #' 
-# n_duplicate = ???
+ n_duplicate = 0 #after running the above function, there should not be any duplicates in the new dataframe?
 
 
 #' # Problem 6: Coding ordinal variables #
