@@ -217,11 +217,15 @@ dataf = dataf%>%
     factor_integer= as.integer(charactor_factor) #taking factor and turning it into integer
   }
 dataf %>%
-  mutate(across(exter.cond, bsmt.cond, heating.qc, garage.cond) = char_to_int(exter.cond, character_order)) 
+  #mutate(across( char_to_int(exter.cond, exter.cond, bsmt.cond, heating.qc, garage.cond, character_order)) )
   #note, first try above did not work but taking a break for right now.
 
-
-
+  dataaf= dataf %>%
+  mutate_at(c('exter.cond', 'bsmt.cond', 'heating.qc', 'garage.cond'), char_to_int,character_order)
+#I tried getting it to work using mutate across but wasn't able to get the code to run right (error is this: Error: Problem with `mutate()` input `..1`.
+#ℹ `..1 = across(...)`.
+#x unused arguments (bsmt.cond, heating.qc, garage.cond, character_order)) 
+#so tried running it as a mutate at but think I am still having an error even though it definitely seems to be running a little bit more.
 #' # Problem 7 #
 # problem 7 ----
 #' *Recall that we're interested in finding variables that are highly correlated with sale price.  We can use the function `cor()` to construct a correlation matrix, with correlations between all pairs of variables in the dataframe.  But this creates two challenges.  First, `cor()` only works with numerical inputs.  If we try it with our current dataframe, it throws an error*:  
