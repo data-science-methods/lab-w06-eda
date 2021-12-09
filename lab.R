@@ -277,6 +277,4 @@ top10<- cor_df%>%
 #' *In 1.2, you identified some variables that you thought might be good predictors of sale price.  How good were your expectations?* 
 #' The three I said I thought would be correlated were: Overall condition, building type, year built
 #' According to the above calculation, the only one I was correct about was year built, although I think theoretically I was close in my guess about overall condition, but rather than overall condition overall quality was important
-#' 
-#' 
 
