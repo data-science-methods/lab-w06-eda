@@ -279,3 +279,4 @@ top10<- cor_df%>%
 #' According to the above calculation, the only one I was correct about was year built, although I think theoretically I was close in my guess about overall condition, but rather than overall condition overall quality was important
 #' 
 #' 
+
