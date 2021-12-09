@@ -230,31 +230,33 @@ dataf %>%
 # problem 7 ----
 #' *Recall that we're interested in finding variables that are highly correlated with sale price.  We can use the function `cor()` to construct a correlation matrix, with correlations between all pairs of variables in the dataframe.  But this creates two challenges.  First, `cor()` only works with numerical inputs.  If we try it with our current dataframe, it throws an error*:  
 
-# cor(dataf)
+cor(dataf)
 
 #' *Second, the result will be a matrix — a 2D collection of numbers — rather than a dataframe.  We'll need to convert it back to a dataframe to use our familiar tidyverse tools, eg, using `arrange()` to put the correlations in descending order.* 
 #' 
 #' 1. *For the first problem (column types), we could use the tidyverse function `select()` to pull out a given set of columns from the dataframe.*
 
-# select(dataf, saleprice, overall.cond, gr.liv.area)
+select(dataf, saleprice, overall.cond, gr.liv.area)
 
 #' *But manually typing out all of the numerical covariates would be tedious and prone to error.  Fortunately `select()` is much more powerful than this.  You can read more in `?select` or here: <https://tidyselect.r-lib.org/reference/language.html>.  Then specifically read the docs for `where()`.*
 #' 
 #' *Write a pipe that `select()`s the numeric columns and passes the result to `cor()` for a Spearman regression and uses the `pairwise.complete.obs` method to handle missing values.  Assign the result to `cor_matrix`.*  
-# cor_matrix = ???
+ cor_matrix = dataf%>%
+   select(where(is.numeric)) %>%
+   cor(method='spearman', use= "pairwise.complete.obs")
 
 
 #' 2. *Now we convert the correlation matrix into a dataframe. Uncomment the following line, and explain what it's doing.* 
-# cor_df = as_tibble(cor_matrix, rownames = 'covar')
-#' 
+cor_df = as_tibble(cor_matrix, rownames = 'covar')
+#' It is renaming the rows into something labeled "covar" after converting the correlations into a tibble
 #' 
 #' 
 
 
 #' 3. *What do the rows of `cor_df` represent?  The columns?  The values in each cell?* 
-#' - rows: 
-#' - columns: 
-#' - values: 
+#' - rows: each row is an integer variable from dataf
+#' - columns: each column is also an integer variable from dataf
+#' - values: the values are the correlation calculation between the column and row variable
 
 #' 4. *We've calculated the correlations for each pair of variables.  Now we want to construct a table with the top 10 most highly-correlated variables.  Write a pipe that does the following, in order:*  
 #' - *Start with `cor_df`*
@@ -264,11 +266,16 @@ dataf %>%
 #' - *Keep the top 10 rows.  Hint: `?top_n`*
 #' - *Assigns the result to the variable `top_10`*
 #' 
-
+top10<- cor_df%>%
+  select(covar,saleprice) %>%
+  mutate(absolute_correlation = abs(saleprice))%>%
+  arrange(desc(absolute_correlation)) %>%
+  top_n(10)
 
 #' # Problem 8 #
 # problem 8 ----
 #' *In 1.2, you identified some variables that you thought might be good predictors of sale price.  How good were your expectations?* 
-#' 
+#' The three I said I thought would be correlated were: Overall condition, building type, year built
+#' According to the above calculation, the only one I was correct about was year built, although I think theoretically I was close in my guess about overall condition, but rather than overall condition overall quality was important
 #' 
 #' 
