@@ -60,7 +60,7 @@ ames_raw$SalePrice
 # problem 2 ----
 #' *`AmesHousing` includes a few different representations of the data.  We'll be working with `ames_raw`, which represents what you'd get from reading in the original CSV file.  However — like a lot of CSV files — the column names aren't R-friendly.*
 #' 1. *Try running the following line.  Can you explain why this causes an error?*
-ames_raw$MS SubClass
+# ames_raw$MS SubClass
 # We are trying to pull a column that we think is in the dataframe ames_raw, but it likely did not read over in the same way when uploaded from the csv into R. R is also case senstive, so this could be something setting it off, and the fact that there is a space in the name is an issue.
 
 #' 2. *We can use `set_names()` to modify a variable's names (here, the column names) in a pipe-friendly way.  In particular, `set_names()` supports passing a function to modify the names. 
