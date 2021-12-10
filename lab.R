@@ -184,10 +184,10 @@ dataf_nodup %>%
 
 #' 5. *We can fix this by passing in a character vector of the levels in the desired order, namely, from Po (Poor) to Ex (Excellent).  Modify `char_to_int()` to use such a vector in the `as.factor()` call.  Why doesn't this work?*
 #' 
-character_order<- c('Po', 'Fa', 'Ta', 'Gd', 'Ex') # establish the order
-char_to_int= function(character_vector) { #name and return type 
-charactor_factor = as.factor(character_vector, levels=character_order) #taking vector and turning into a factor, and trying to add a section for adding levels to this
-factor_integer= as.integer(charactor_factor) #taking factor and turning it into integer
+character_order <- c('Po', 'Fa', 'Ta', 'Gd', 'Ex') # establish the order
+char_to_int = function(character_vector) { #name and return type 
+    charactor_factor = as.factor(character_vector, levels=character_order) #taking vector and turning into a factor, and trying to add a section for adding levels to this
+    factor_integer= as.integer(charactor_factor) #taking factor and turning it into integer
 }
 dataf_nodup %>%
   mutate(exter.cond= char_to_int(exter.cond, levels= character_order)) %>%
