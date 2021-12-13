@@ -112,7 +112,7 @@ ungroup()
 #' 
 #' 
 
-#' 2. *Run the following two expressions.  Why do they give different results?* 
+#' 2. *Run the following two expressions. Why do they give different results?* 
 #' 
 #' 
 #' 
@@ -199,7 +199,7 @@ char_to_int = function(character_vector, character_order= c('Po', 'Fa', 'Ta', 'G
 dataf_nodup %>%
   mutate(exter.cond= char_to_int(exter.cond, character_order)) %>%
   count(exter.cond)
-#this does not work, I don't know if its with my coding or if its supposed to not work
+
 
 #' 6. *The most efficient way to avoid this poor design is to use `forcats::fct_relevel()`.  This is loaded as part of the tidyverse, so you don't need to modify the packages loaded up above, or `DESCRIPTION`.  Rewrite `char_to_int()` again, using `fct_relevel()` in place of `as.factor()`, and check against your answer to #2 to ensure that this is all working as expected.*
 #' 
