@@ -59,7 +59,9 @@ library(AmesHousing)
 #' *`AmesHousing` includes a few different representations of the data.  We'll be working with `ames_raw`, which represents what you'd get from reading in the original CSV file.  
 #' However — like a lot of CSV files — the column names aren't R-friendly.*
 #' 1. *Try running the following line.  Can you explain why this causes an error?*
-ames_raw$MS SubClass
+
+# commenting this out - of course it was THIS causing the error
+# ames_raw$MS SubClass
 #' *There's a space in the variable's name*
 
 #' 2. *We can use `set_names()` to modify a variable's names (here, the column names) in a pipe-friendly way.  
