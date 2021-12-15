@@ -249,13 +249,13 @@ select(dataf, saleprice, overall.cond, gr.liv.area)
 #' You can read more in `?select` or here: <https://tidyselect.r-lib.org/reference/language.html>.  Then specifically read the docs for `where()`.*
 #' 
 #' *Write a pipe that `select()`s the numeric columns and passes the result to `cor()` for a Spearman regression and uses the `pairwise.complete.obs` method to handle missing values.  Assign the result to `cor_matrix`.*  
-cor_matrix = dataf %>%
-    select(where(is.numeric)) %>%
-    cor(method = 'spearman', use = 'pairwise.complete.obs')
+#cor_matrix = dataf %>%
+#    select(where(is.numeric)) %>%
+#    cor(method = 'spearman', use = 'pairwise.complete.obs')
 
 
 #' 2. *Now we convert the correlation matrix into a dataframe. Uncomment the following line, and explain what it's doing.* 
-cor_df = as_tibble(cor_matrix, rownames = 'covar')
+# Dennis suggests this is throwing the pull request error - cor_df = as_tibble(cor_matrix, rownames = 'covar')
 #' now the matrix is a tibble and the first column is named covar, all the rest is, well variable relationships, i.e. sale price is 1.0 with itself. 
 #' 
 #' 
@@ -275,11 +275,11 @@ cor_df = as_tibble(cor_matrix, rownames = 'covar')
 #' - *Keep the top 10 rows.  Hint: `?top_n`*
 #' - *Assigns the result to the variable `top_10`*
 #' 
-top_10 = cor_df %>% 
-    select(covar, saleprice) %>%
-    mutate(new_var_absVal = abs(saleprice)) %>%
-    arrange(desc(new_var_absVal)) %>%
-    top_n(10)
+#top_10 = cor_df %>% 
+#    select(covar, saleprice) %>%
+#    mutate(new_var_absVal = abs(saleprice)) %>%
+#    arrange(desc(new_var_absVal)) %>%
+#    top_n(10)
 
 #' # Problem 8 #
 # problem 8 ----
